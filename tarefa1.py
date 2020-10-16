@@ -1,5 +1,6 @@
 
 import math
+import numpy
 #------------------------------------------------------------------
 def rot_givens_s(w,b,i,j,c,s):
     ''' ( list,list,int, int, float, float )
@@ -100,16 +101,36 @@ def sist_simult(w,a):
             somatorio=0.
             for i in range(k+1,len(w[0])):
                 somatorio+=w[k][i]*lista[i][j]
+            print("lista:",lista)
+            print("a:",a)
+            print("w:",w)
+            print("somatorio:",somatorio)
             lista[k][j]=(a[k][j] - somatorio)/w[k][k]
     return lista
 #------------------------------------------------------------------
-def main():
-    
+def leia_matriz():
+    ''' -> (list)
+    RETORNA uma lista de listas de floats lida de um arquivo dado
+    '''
     ## leitura do arquivo
-    ## w e b já estão como listas de listas/floats
-    w=[[45.,4.,1.],[49.,1.,50.],[17.,13.,20.]]
-    a=[[50.,100.,150.],[100.,200.,300.],[50.,100.,150.]]
-    resolucao = sist_simult(w,a)
+    nome = input("Digite o nome do arquivo com a matriz:")
+    with open(nome, 'r', encoding='utf-8') as arq:
+        texto = arq.read()
+    linhas = texto.strip().split('\n') #linhas é uma array com cada elemento sendo uma linha da matriz na forma de string
+    #transformando cada linha em uma array com os elementos sendo os elementos da linha
+    for i in range(len(linhas)):
+        linhas[i] = numpy.fromstring(linhas[i], dtype=float, sep=' ')
+    return linhas
+#------------------------------------------------------------------
+def main():
+    w = leia_matriz()
+    b = leia_matriz()
+    print("w:",w)
+    print("b:",b)
+    if len(b[0])>1: #se b representar uma matriz com mais de uma coluna, trata-se de um problema de sistemas simultâneos
+        resolucao = sist_simult(w,b)
+    else:
+        resolucao =  resol_sist(w,b)#caso contrário, trata-se de um sistema linear
     print(resolucao)
 #------------------------------------------------------------------
 
