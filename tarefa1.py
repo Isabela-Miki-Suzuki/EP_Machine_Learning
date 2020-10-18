@@ -5,7 +5,7 @@ import numpy
 def rot_givens_s(w,b,i,j,c,s):
     ''' ( list,list,int, int, float, float )
     RECEBE uma matriz w no formato de lista de listas de floats, de n linhas
-    e m colunas e uma matriz b (lista de floats) e realiza a rotação de 
+    e m colunas e uma matriz b (lista de lista floats) e realiza a rotação de 
     givens nas linhas i e j das matrizes, com c sendo o cosseno do ângulo e s sendo o seno
     '''
     aux=float
@@ -13,9 +13,9 @@ def rot_givens_s(w,b,i,j,c,s):
         aux = c * w[i][r] - s * w[j][r]
         w[j][r] = s * w[i][r] + c * w[j][r]
         w[i][r] = aux
-    aux = c * b[i] - s * b[j]
-    b[j] = s * b[i] + c * b[j]
-    b[i] = aux
+    aux = c * b[i][0] - s * b[j][0]
+    b[j][0] = s * b[i][0] + c * b[j][0]
+    b[i][0] = aux
 #------------------------------------------------------------------
 def rot_givens(w,i,j,c,s):
     ''' ( list,list,int, int, float, float )
@@ -30,12 +30,12 @@ def rot_givens(w,i,j,c,s):
         w[i][r] = aux
 #------------------------------------------------------------------
 def resol_sist(w,b):
-    ''' ( list, list ) -> (list)
+    ''' ( list, list ) -> (list)/(bool)
     RECEBE uma matriz w no formato de lista de listas de floats e uma matriz b
     no formato de lista de floats, a triangulariza por sucessivas rotações de
     givens e resolve o sistema
     RETORNA uma matriz no formato lista de floats representando a matriz solução
-    do sistema linear w*x=b
+    do sistema linear w*x=b ou false caso o sistema seje indeterminado
     '''
     # triangularização
     t=float
@@ -62,15 +62,19 @@ def resol_sist(w,b):
         somatorio=0.
         for j in range(k+1,len(w[0])):
             somatorio+=w[k][j]*lista[j]
-        lista[k]=(b[k] - somatorio)/w[k][k]
+        if w[k][k] != 0:
+            lista[k]=(b[k] - somatorio)/w[k][k]
+        else:
+            print("sistema indeterminado")
+            return False
     return lista
 #------------------------------------------------------------------
 def sist_simult(w,a):
-    ''' ( list, list ) -> (list)
+    ''' ( list, list ) -> (list)/(bool)
     RECEBE uma matriz w e uma matriz a, ambas no formato de lista de listas
     de floats.
     RETORNA uma matriz no formato lista de listas de floats que representa a
-    solução do sistema W*x=A
+    solução do sistema W*x=A ou false caso o sistema seje indeterminado
     '''
     # triangularização
     t=float
@@ -101,11 +105,11 @@ def sist_simult(w,a):
             somatorio=0.
             for i in range(k+1,len(w[0])):
                 somatorio+=w[k][i]*lista[i][j]
-            print("lista:",lista)
-            print("a:",a)
-            print("w:",w)
-            print("somatorio:",somatorio)
-            lista[k][j]=(a[k][j] - somatorio)/w[k][k]
+            if w[k][k] != 0:
+                lista[k][0]=(a[k][j] - somatorio)/w[k][k]
+            else:
+                print("sistema indeterminado")
+                return False
     return lista
 #------------------------------------------------------------------
 def leia_matriz():
@@ -113,7 +117,7 @@ def leia_matriz():
     RETORNA uma lista de listas de floats lida de um arquivo dado
     '''
     ## leitura do arquivo
-    nome = input("Digite o nome do arquivo com a matriz:")
+    nome = input("Digite o nome do arquivo com a matriz: ")
     with open(nome, 'r', encoding='utf-8') as arq:
         texto = arq.read()
     linhas = texto.strip().split('\n') #linhas é uma array com cada elemento sendo uma linha da matriz na forma de string
@@ -125,13 +129,13 @@ def leia_matriz():
 def main():
     w = leia_matriz()
     b = leia_matriz()
-    print("w:",w)
-    print("b:",b)
     if len(b[0])>1: #se b representar uma matriz com mais de uma coluna, trata-se de um problema de sistemas simultâneos
         resolucao = sist_simult(w,b)
     else:
         resolucao =  resol_sist(w,b)#caso contrário, trata-se de um sistema linear
-    print(resolucao)
+    if resolucao != False:
+        for i in range(len(resolucao)):
+            print("x",i+1," = ", resolucao[i][0])
 #------------------------------------------------------------------
 
 #######################################################

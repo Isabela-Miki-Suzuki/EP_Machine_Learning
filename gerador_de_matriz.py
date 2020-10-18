@@ -1,7 +1,7 @@
 import math
 def main():
 	numLin = 64
-	numCol = 64
+	numCol = 3
 	for i in range(numLin):
 		for j in range(numCol):
 
@@ -16,9 +16,13 @@ def main():
 #				print(1./(i+1+j+1-1.), end=" ")
 #			else:
 #				print(0, end=" ")
-
-			print(1, end=" ")
-			break
-		print("")
+			
+			if j==0:
+				print(1, end=" ")
+			if j==1:
+				print(i+1, end=" ")
+			if j==2:
+				print(2*(i+1)-1)
+		#print("")
 if __name__ == "__main__":
     main()
