@@ -62,5 +62,5 @@ def main():
     h = mmq_alternado(a, w)
     print(h)
 # ------------------------------------------------
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()
