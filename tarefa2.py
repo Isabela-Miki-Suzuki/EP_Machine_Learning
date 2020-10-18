@@ -1,12 +1,13 @@
 from math import *
 import numpy as np
 import tarefa1
+EPSILON = pow(10, -5)
 # ------------------------------------------------
 # zera valores negativos de uma matriz
 def pos(m):
     for i in range(len(m)):
         for j in range(len(m[0])):
-            m[i][j] = max(0, m[i][j])
+            m[i][j] = max(EPSILON, m[i][j])
     return m
 # ------------------------------------------------
 # calcula a norma de Frobenius ao quadrado de uma matriz
@@ -28,10 +29,10 @@ def normalize_col(m):
             m[i][j] = m[i][j] / somatorio
 # ------------------------------------------------
 def mmq_alternado(a, w):
-    epsilon = pow(10, -5)
+    #epsilon = pow(10, -5)
     itmax = 100
     count = 0
-    err = epsilon
+    err = EPSILON
     err_anterior = 0.
     a_copy = a.copy()  # cópia da matriz A
 
@@ -43,7 +44,7 @@ def mmq_alternado(a, w):
         # cálculo do novo erro
         err = norm((np.array(a) - np.array(w) @ np.array(h)).tolist())
         count += 1  # incrementa o contador
-        if (abs(err - err_anterior) < epsilon) or (count >= itmax):
+        if (abs(err - err_anterior) <  EPSILON) or (count >= itmax):
             break
         err_anterior = err
         # transpotas das matrizes
@@ -55,17 +56,19 @@ def mmq_alternado(a, w):
 # ------------------------------------------------
 def main():
     # leitura da matriz A nxm
-    print("Matrix A")
-    n = int(input("number of rows, n = "))
-    m = int(input("number of columns, m = "))
-    a = []
-    for i in range(0, n):
-        a.append([float(j) for j in input().split()])
+#    print("Matrix A")
+#    n = int(input("number of rows, n = "))
+#    m = int(input("number of columns, m = "))
+#    a = []
+#    for i in range(0, n):
+#        a.append([float(j) for j in input().split()])
+
+    a = tarefa1.leia_matriz()
 
     p = int(input("p = "))
 
     # Inicialização aleatória da matriz W nxp
-    w = np.random.rand(n, p).tolist()
+    w = np.random.rand(len(a), p).tolist()
     h = mmq_alternado(a, w)
     print(h)
 # ------------------------------------------------
