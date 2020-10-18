@@ -1,120 +1,61 @@
-
 import math
-import numpy
+import numpy as np
 #------------------------------------------------------------------
-def rot_givens_s(w,b,i,j,c,s):
-    ''' ( list,list,int, int, float, float )
-    RECEBE uma matriz w no formato de lista de listas de floats, de n linhas
-    e m colunas e uma matriz b (lista de lista floats) e realiza a rotação de 
-    givens nas linhas i e j das matrizes, com c sendo o cosseno do ângulo e s sendo o seno
+def rot_givens(w,i,j,k,c,s):
+    ''' ( array, array, int, int, int, float, float )
+    RECEBE uma matriz w no formato de numpy.array de floats, de n linhas
+    e m colunas e realiza a rotação de givens nas linhas i e j da matriz, 
+    a partir da coluna k, com c sendo o cosseno e s, o seno do ângulo
     '''
-    aux=float
-    for r in range(len(w[0])):
-        aux = c * w[i][r] - s * w[j][r]
-        w[j][r] = s * w[i][r] + c * w[j][r]
-        w[i][r] = aux
-    aux = c * b[i][0] - s * b[j][0]
-    b[j][0] = s * b[i][0] + c * b[j][0]
-    b[i][0] = aux
-#------------------------------------------------------------------
-def rot_givens(w,i,j,c,s):
-    ''' ( list,list,int, int, float, float )
-    RECEBE uma matriz w no formato de lista de listas de floats, de n linhas
-    e m colunas e realiza a rotação de givens nas linhas i e j da matriz, com
-    c sendo o cosseno do ângulo e s sendo o seno
-    '''
-    aux=float
-    for r in range(len(w[0])):
-        aux = c * w[i][r] - s * w[j][r]
-        w[j][r] = s * w[i][r] + c * w[j][r]
-        w[i][r] = aux
-#------------------------------------------------------------------
-def resol_sist(w,b):
-    ''' ( list, list ) -> (list)/(bool)
-    RECEBE uma matriz w no formato de lista de listas de floats e uma matriz b
-    no formato de lista de floats, a triangulariza por sucessivas rotações de
-    givens e resolve o sistema
-    RETORNA uma matriz no formato lista de floats representando a matriz solução
-    do sistema linear w*x=b ou false caso o sistema seje indeterminado
-    '''
-    # triangularização
-    t=float
-    c=float
-    s=float
-    for k in range(len(w[0])): #para cada coluna
-        for j in range(len(w)-1,k,-1): #varrendo as linhas da última até chegar no elemento anterior ao da diaginal
-            i=j-1
-            if w[j][k] != 0:
-                if abs(w[i][k]) > abs(w[j][k]):
-                    t = - w[j][k] / w[i][k]
-                    c = 1/(math.sqrt(1+t*t))
-                    s = c*t
-                else:
-                    t = - w[i][k] / w[j][k]
-                    s = 1/(math.sqrt(1+t*t))
-                    c = s*t
-                rot_givens_s(w, b, i, j,c,s)
-    # resolução
-    lista = [] # a matriz resolução
-    for i in range(len(w[0])):
-        lista+=[0]
-    for k in range(len(w[0])-1,-1,-1):
-        somatorio=0.
-        for j in range(k+1,len(w[0])):
-            somatorio+=w[k][j]*lista[j]
-        if w[k][k] != 0:
-            lista[k]=(b[k] - somatorio)/w[k][k]
-        else:
-            print("sistema indeterminado")
-            return False
-    return lista
+    for r in range(k, w.shape[1]):
+        aux = c * w[i,r] - s * w[j,r]
+        w[j,r] = s * w[i,r] + c * w[j,r]
+        w[i,r] = aux
 #------------------------------------------------------------------
 def sist_simult(w,a):
-    ''' ( list, list ) -> (list)/(bool)
-    RECEBE uma matriz w e uma matriz a, ambas no formato de lista de listas
+    ''' ( array, array ) -> (array)/(bool)
+    RECEBE uma matriz w e uma matriz a, ambas no formato de numpy.array
     de floats.
-    RETORNA uma matriz no formato lista de listas de floats que representa a
-    solução do sistema W*x=A ou false caso o sistema seje indeterminado
+    RETORNA uma matriz no formato numpy.array de floats que representa a
+    aproximação para a solução do sistema W*x=A ou false caso o sistema 
+    seja indeterminado
     '''
     # triangularização
-    t=float
-    c=float
-    s=float
-    for k in range(len(w[0])): #para cada coluna
-        for j in range(len(w)-1,k,-1): #varrendo as linhas da última até chegar no elemento anterior ao da diaginal
+    n = w.shape[0]
+    p = w.shape[1]
+    m = a.shape[1]
+    for k in range(p): #para cada coluna
+        #varrendo as linhas da última até chegar no elemento anterior ao da diaginal
+        for j in range(n-1,k,-1): 
             i=j-1
-            if w[j][k] != 0:
-                if abs(w[i][k]) > abs(w[j][k]):
-                    t = - w[j][k] / w[i][k]
+            if w[j,k] != 0:
+                if abs(w[i,k]) > abs(w[j,k]):
+                    t = - w[j,k] / w[i,k]
                     c = 1/(math.sqrt(1+t*t))
                     s = c*t
                 else:
-                    t = - w[i][k] / w[j][k]
+                    t = - w[i,k] / w[j,k]
                     s = 1/(math.sqrt(1+t*t))
                     c = s*t
-                rot_givens(w, i, j,c,s)
-                rot_givens(a, i, j,c,s)
+                rot_givens(w, i, j, k, c, s)
+                rot_givens(a, i, j, k, c, s)
     # resolução
-    lista = [] # a matriz resolução
-    for i in range(len(w[0])): #já formando as linhas
-        lista+=[[]]
-        for j in range(len(a[0])): #já preenchendo com zeros
-            lista[i]+=[0]
-    for k in range(len(w[0])-1,-1,-1):
-        for j in range(len(a[0])):    
+    h = np.zeros((p,m)) # a matriz resolução já preenchida com zeros
+    for k in range(p-1,-1,-1):
+        for j in range(m):    
             somatorio=0.
-            for i in range(k+1,len(w[0])):
-                somatorio+=w[k][i]*lista[i][j]
-            if w[k][k] != 0:
-                lista[k][0]=(a[k][j] - somatorio)/w[k][k]
+            for i in range(k+1,p):
+                somatorio+=w[k,i]*h[i,j]
+            if w[k,k] != 0:
+                h[k,j]=(a[k,j] - somatorio)/w[k,k]
             else:
                 print("sistema indeterminado")
                 return False
-    return lista
+    return h
 #------------------------------------------------------------------
 def leia_matriz():
-    ''' -> (list)
-    RETORNA uma lista de listas de floats lida de um arquivo dado
+    ''' -> (array)
+    RETORNA um numpy.array de floats a partir de uma matriz lida do arquivo dado
     '''
     ## leitura do arquivo
     nome = input("Digite o nome do arquivo com a matriz: ")
@@ -128,14 +69,11 @@ def leia_matriz():
 #------------------------------------------------------------------
 def main():
     w = leia_matriz()
-    b = leia_matriz()
-    if len(b[0])>1: #se b representar uma matriz com mais de uma coluna, trata-se de um problema de sistemas simultâneos
-        resolucao = sist_simult(w,b)
-    else:
-        resolucao =  resol_sist(w,b)#caso contrário, trata-se de um sistema linear
-    if resolucao != False:
-        for i in range(len(resolucao)):
-            print("x",i+1," = ", resolucao[i][0])
+    a = leia_matriz()
+    h = sist_simult(w,a)
+    if h != False:
+        for i in range(h.shape[0]):
+            print("x",i+1," = ", h[i,0])
 #------------------------------------------------------------------
 
 #######################################################
