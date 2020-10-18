@@ -7,16 +7,16 @@ EPSILON = pow(10, -5)
 # zera valores negativos de uma matriz
 def pos(m):
     for i in range(m.shape[0]):
-		for j in range(m.shape[1]):
-			m[i,j] = max(EPSILON,m[i,j])
+	    for j in range(m.shape[1]):
+		    m[i,j] = max(EPSILON,m[i,j])
     return m
 # ------------------------------------------------
 # calcula a norma de Frobenius ao quadrado de uma matriz
 def norm(m):
     norm = 0.
     for i in range(m.shape[0]):
-		for j in range(m.shape[1]):
-            norm += pow(m[i,j], 2)
+	    for j in range(m.shape[1]):
+		    norm += pow(m[i,j], 2)
     return norm
 # ------------------------------------------------
 # normalização das colunas de uma matriz
@@ -30,7 +30,6 @@ def normalize_col(m):
             m[i,j] = m[i,j] / somatorio
 # ------------------------------------------------
 def mmq_alternado(a, w):
-    #epsilon = pow(10, -5)
     itmax = 100
     count = 0
     err = EPSILON
