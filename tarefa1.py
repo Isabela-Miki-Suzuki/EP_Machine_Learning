@@ -2,79 +2,24 @@
 import math
 import numpy
 #------------------------------------------------------------------
-def rot_givens_s(w,b,i,j,c,s):
-    ''' ( list,list,int, int, float, float )
-    RECEBE uma matriz w no formato de lista de listas de floats, de n linhas
-    e m colunas e uma matriz b (lista de lista floats) e realiza a rotação de 
-    givens nas linhas i e j das matrizes, com c sendo o cosseno do ângulo e s sendo o seno
-    '''
-    aux=float
-    for r in range(len(w[0])):
-        aux = c * w[i][r] - s * w[j][r]
-        w[j][r] = s * w[i][r] + c * w[j][r]
-        w[i][r] = aux
-    aux = c * b[i][0] - s * b[j][0]
-    b[j][0] = s * b[i][0] + c * b[j][0]
-    b[i][0] = aux
-#------------------------------------------------------------------
-def rot_givens(w,i,j,c,s):
+def rot_givens(w,i,j,c,s,k):
     ''' ( list,list,int, int, float, float )
     RECEBE uma matriz w no formato de lista de listas de floats, de n linhas
     e m colunas e realiza a rotação de givens nas linhas i e j da matriz, com
     c sendo o cosseno do ângulo e s sendo o seno
     '''
     aux=float
-    for r in range(len(w[0])):
+    for r in range(k, len(w[0])):
         aux = c * w[i][r] - s * w[j][r]
         w[j][r] = s * w[i][r] + c * w[j][r]
         w[i][r] = aux
-#------------------------------------------------------------------
-def resol_sist(w,b):
-    ''' ( list, list ) -> (list)/(bool)
-    RECEBE uma matriz w no formato de lista de listas de floats e uma matriz b
-    no formato de lista de floats, a triangulariza por sucessivas rotações de
-    givens e resolve o sistema
-    RETORNA uma matriz no formato lista de floats representando a matriz solução
-    do sistema linear w*x=b ou false caso o sistema seje indeterminado
-    '''
-    # triangularização
-    t=float
-    c=float
-    s=float
-    for k in range(len(w[0])): #para cada coluna
-        for j in range(len(w)-1,k,-1): #varrendo as linhas da última até chegar no elemento anterior ao da diaginal
-            i=j-1
-            if w[j][k] != 0:
-                if abs(w[i][k]) > abs(w[j][k]):
-                    t = - w[j][k] / w[i][k]
-                    c = 1/(math.sqrt(1+t*t))
-                    s = c*t
-                else:
-                    t = - w[i][k] / w[j][k]
-                    s = 1/(math.sqrt(1+t*t))
-                    c = s*t
-                rot_givens_s(w, b, i, j,c,s)
-    # resolução
-    lista = [] # a matriz resolução
-    for i in range(len(w[0])):
-        lista+=[0]
-    for k in range(len(w[0])-1,-1,-1):
-        somatorio=0.
-        for j in range(k+1,len(w[0])):
-            somatorio+=w[k][j]*lista[j]
-        if w[k][k] != 0:
-            lista[k]=(b[k] - somatorio)/w[k][k]
-        else:
-            print("sistema indeterminado")
-            return False
-    return lista
 #------------------------------------------------------------------
 def sist_simult(w,a):
     ''' ( list, list ) -> (list)/(bool)
     RECEBE uma matriz w e uma matriz a, ambas no formato de lista de listas
     de floats.
     RETORNA uma matriz no formato lista de listas de floats que representa a
-    solução do sistema W*x=A ou false caso o sistema seje indeterminado
+    solução do sistema W*x=A ou false caso o sistema seja indeterminado
     '''
     # triangularização
     t=float
@@ -92,8 +37,8 @@ def sist_simult(w,a):
                     t = - w[i][k] / w[j][k]
                     s = 1/(math.sqrt(1+t*t))
                     c = s*t
-                rot_givens(w, i, j,c,s)
-                rot_givens(a, i, j,c,s)
+                rot_givens(w, i, j, c, s, k)
+                rot_givens(a, i, j, c, s, k)
     # resolução
     lista = [] # a matriz resolução
     for i in range(len(w[0])): #já formando as linhas
@@ -106,7 +51,7 @@ def sist_simult(w,a):
             for i in range(k+1,len(w[0])):
                 somatorio+=w[k][i]*lista[i][j]
             if w[k][k] != 0:
-                lista[k][0]=(a[k][j] - somatorio)/w[k][k]
+                lista[k][j]=(a[k][j] - somatorio)/w[k][k]
             else:
                 print("sistema indeterminado")
                 return False
@@ -129,10 +74,7 @@ def leia_matriz():
 def main():
     w = leia_matriz()
     b = leia_matriz()
-    if len(b[0])>1: #se b representar uma matriz com mais de uma coluna, trata-se de um problema de sistemas simultâneos
-        resolucao = sist_simult(w,b)
-    else:
-        resolucao =  resol_sist(w,b)#caso contrário, trata-se de um sistema linear
+    resolucao =  resol_sist(w,b)
     if resolucao != False:
         for i in range(len(resolucao)):
             print("x",i+1," = ", resolucao[i][0])
