@@ -21,7 +21,7 @@ def norm(m):
 # ------------------------------------------------
 # normalização das colunas de uma matriz
 def normalize_col(m):
-    for j in range(m.shape[1])):
+    for j in range(m.shape[1]):
         somatorio = 0.
         for i in range(m.shape[0]):
             somatorio += pow(m[i,j], 2)
@@ -32,7 +32,7 @@ def normalize_col(m):
 def mmq_alternado(a, w):
     itmax = 100
     count = 0
-    err = EPSILON
+    err_anterior = 0.
     a_copy = a.copy()  # cópia da matriz A
 
     while True:
@@ -50,7 +50,7 @@ def mmq_alternado(a, w):
         h = h.T
         a = a_copy.T
         # resolução do sistema At=Ht*Wt, nova aproximação de W não negativa
-        w = pos(tarefa1.sist_simult(h, a))).T
+        w = pos(tarefa1.sist_simult(h, a)).T
     return h
 # ------------------------------------------------
 def main():
