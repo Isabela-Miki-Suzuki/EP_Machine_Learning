@@ -68,8 +68,8 @@ def leia_matriz():
     return linhas
 #------------------------------------------------------------------
 def main():
-    w = leia_matriz()
-    a = leia_matriz()
+    w = np.loadtxt(input("Digite o nome do arquivo com a matriz W: "))
+    a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
     h = sist_simult(w,a)
     if h != False:
         for i in range(h.shape[0]):
