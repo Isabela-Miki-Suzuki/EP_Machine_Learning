@@ -54,7 +54,7 @@ def mmq_alternado(a, w):
     return h
 # ------------------------------------------------
 def main():
-    a = tarefa1.leia_matriz()
+    a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
     p = int(input("p = "))
 
     # Inicialização aleatória da matriz W nxp
