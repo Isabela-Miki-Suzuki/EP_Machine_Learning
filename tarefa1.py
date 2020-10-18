@@ -74,7 +74,7 @@ def leia_matriz():
 def main():
     w = leia_matriz()
     a = leia_matriz()
-    resolucao =  sist_simult(w,a)
+    resolucao = sist_simult(w,a)
     if resolucao != False:
         for i in range(len(resolucao)):
             print("x",i+1," = ", resolucao[i][0])
