@@ -59,12 +59,13 @@ def leia_matriz():
     '''
     ## leitura do arquivo
     nome = input("Digite o nome do arquivo com a matriz: ")
-    with open(nome, 'r', encoding='utf-8') as arq:
-        texto = arq.read()
-    linhas = texto.strip().split('\n') #linhas é uma array com cada elemento sendo uma linha da matriz na forma de string
+    #with open(nome, 'r', encoding='utf-8') as arq:
+    #    texto = arq.read() #texto é string
+    #linhas = texto.strip().split('\n') #linhas é uma array com cada elemento sendo uma linha da matriz na forma de string
     #transformando cada linha em uma array com os elementos sendo os elementos da linha
-    for i in range(len(linhas)):
-        linhas[i] = numpy.fromstring(linhas[i], dtype=float, sep=' ')
+    #for i in range(len(linhas)):
+    #    linhas[i] = np.fromstring(linhas[i], dtype=float, sep=' ')
+    np.loadtxt(nome)
     return linhas
 #------------------------------------------------------------------
 def main():
