@@ -8,17 +8,23 @@ def rot_givens(w,i,j,k,c,s,m):
     a partir da coluna k, com c sendo o cosseno e s, o seno do ângulo
     m é o número de colunas da matriz
     '''
-    for r in range(k, m):
-        if m > 1:
+    if m > 1:
+        for r in range(k, m):
             aux = c * w[i,r] - s * w[j,r]
             w[j,r] = s * w[i,r] + c * w[j,r]
             w[i,r] = aux
-        else:
+    else:
             aux = c * w[i] - s * w[j]
             w[j] = s * w[i] + c * w[j]
             w[i] = aux
 #------------------------------------------------------------------
-def sist_simult(w,a, matrizEhColuna):
+def permut(w, linha1, linha2):
+    '''(list, int, int) -> '''
+    aux = w[linha1].copy()
+    w[linha1]=w[linha2]
+    w[linha2]=aux
+#------------------------------------------------------------------
+def resol_sist(w,a, matrizEhColuna):
     ''' ( array, array, bool ) -> (array)/(bool)
     RECEBE uma matriz w e uma matriz a, ambas no formato de numpy.array
     de floats e um boolean indicando se A é uma matriz coluna.
@@ -33,7 +39,6 @@ def sist_simult(w,a, matrizEhColuna):
         m = 1
     else:
         m = a.shape[1]
-
     for k in range(p): #para cada coluna
         #varrendo as linhas da última até chegar no elemento anterior ao da diaginal
         for j in range(n-1,k,-1): 
@@ -63,11 +68,12 @@ def sist_simult(w,a, matrizEhColuna):
                     h[k,j]=(a[k] - somatorio)/w[k,k]
             else:
                 print("sistema indeterminado")
-                return np.array() #devolve uma array vazia
+                return np.array([False]) #devolve uma array de único elemento o boolean False
     return h
 #------------------------------------------------------------------
 def matriz_coluna(nome):
-    ''' -> (bool)
+    ''' (str)-> (bool)
+    RECEBE o nome do arquivo
     RETORNA True caso o arquivo seje uma matriz coluna e False caso contrário
     '''
     ## leitura do arquivo
@@ -83,8 +89,8 @@ def main():
     arqA = input("Digite o nome do arquivo com a matriz A: ")
     matrizEhColuna = matriz_coluna(arqA)
     a = np.loadtxt(arqA)
-    h = sist_simult(w,a, matrizEhColuna)
-    if h.shape[0]>0:
+    h = resol_sist(w,a, matrizEhColuna)
+    if h[0] != False:
         print("matriz solução: ", h)
 #------------------------------------------------------------------
 

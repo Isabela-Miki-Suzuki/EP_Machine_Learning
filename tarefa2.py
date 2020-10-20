@@ -6,6 +6,7 @@ EPSILON = pow(10, -5)
 # ------------------------------------------------
 # zera valores negativos de uma matriz
 def pos(m):
+    print(m)
     for i in range(m.shape[0]):
         for j in range(m.shape[1]):
             m[i,j] = max(EPSILON,m[i,j])
@@ -39,7 +40,7 @@ def mmq_alternado(a, w):
         normalize_col(w)
         a = a_copy
         # resolução do sistema A=W*H, H é uma matriz pxm não negativa
-        h = pos(tarefa1.sist_simult(w, a))
+        h = pos(tarefa1.resol_sist(w, a, False))
         # cálculo do novo erro
         err = norm(a - w@h)
         count += 1  # incrementa o contador
@@ -50,13 +51,13 @@ def mmq_alternado(a, w):
         h = h.T
         a = a_copy.T
         # resolução do sistema At=Ht*Wt, nova aproximação de W não negativa
-        w = pos(tarefa1.sist_simult(h, a)).T
+        w = pos(tarefa1.resol_sist(h, a, False)).T
     return h
 # ------------------------------------------------
 def main():
     a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
     p = int(input("p = "))
-
+    
     # Inicialização aleatória da matriz W nxp
     w = np.ndarray(shape=(a.shape[0], p), dtype=float)
     h = mmq_alternado(a, w)
