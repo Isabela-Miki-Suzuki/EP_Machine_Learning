@@ -1,21 +1,27 @@
 import math
 import numpy as np
 #------------------------------------------------------------------
-def rot_givens(w,i,j,k,c,s):
-    ''' ( array, array, int, int, int, float, float )
+def rot_givens(w,i,j,k,c,s,m):
+    ''' ( array, array, int, int, int, float, float, int )
     RECEBE uma matriz w no formato de numpy.array de floats, de n linhas
     e m colunas e realiza a rotação de givens nas linhas i e j da matriz, 
     a partir da coluna k, com c sendo o cosseno e s, o seno do ângulo
+    m é o número de colunas da matriz
     '''
-    for r in range(k, w.shape[1]):
-        aux = c * w[i,r] - s * w[j,r]
-        w[j,r] = s * w[i,r] + c * w[j,r]
-        w[i,r] = aux
+    for r in range(k, m):
+        if m > 1:
+            aux = c * w[i,r] - s * w[j,r]
+            w[j,r] = s * w[i,r] + c * w[j,r]
+            w[i,r] = aux
+        else:
+            aux = c * w[i] - s * w[j]
+            w[j] = s * w[i] + c * w[j]
+            w[i] = aux
 #------------------------------------------------------------------
-def sist_simult(w,a):
-    ''' ( array, array ) -> (array)/(bool)
+def sist_simult(w,a, matrizEhColuna):
+    ''' ( array, array, bool ) -> (array)/(bool)
     RECEBE uma matriz w e uma matriz a, ambas no formato de numpy.array
-    de floats.
+    de floats e um boolean indicando se A é uma matriz coluna.
     RETORNA uma matriz no formato numpy.array de floats que representa a
     aproximação para a solução do sistema W*x=A ou false caso o sistema 
     seja indeterminado
@@ -23,7 +29,11 @@ def sist_simult(w,a):
     # triangularização
     n = w.shape[0]
     p = w.shape[1]
-    m = a.shape[1]
+    if matrizEhColuna:
+        m = 1
+    else:
+        m = a.shape[1]
+
     for k in range(p): #para cada coluna
         #varrendo as linhas da última até chegar no elemento anterior ao da diaginal
         for j in range(n-1,k,-1): 
@@ -37,8 +47,8 @@ def sist_simult(w,a):
                     t = - w[i,k] / w[j,k]
                     s = 1/(math.sqrt(1+t*t))
                     c = s*t
-                rot_givens(w, i, j, k, c, s)
-                rot_givens(a, i, j, k, c, s)
+                rot_givens(w, i, j, k, c, s, p)
+                rot_givens(a, i, j, k, c, s, m)
     # resolução
     h = np.zeros((p,m)) # a matriz resolução já preenchida com zeros
     for k in range(p-1,-1,-1):
@@ -47,34 +57,35 @@ def sist_simult(w,a):
             for i in range(k+1,p):
                 somatorio+=w[k,i]*h[i,j]
             if w[k,k] != 0:
-                h[k,j]=(a[k,j] - somatorio)/w[k,k]
+                if m > 1:
+                    h[k,j]=(a[k,j] - somatorio)/w[k,k]
+                else:
+                    h[k,j]=(a[k] - somatorio)/w[k,k]
             else:
                 print("sistema indeterminado")
-                return False
+                return np.array() #devolve uma array vazia
     return h
 #------------------------------------------------------------------
-def leia_matriz():
-    ''' -> (array)
-    RETORNA um numpy.array de floats a partir de uma matriz lida do arquivo dado
+def matriz_coluna(nome):
+    ''' -> (bool)
+    RETORNA True caso o arquivo seje uma matriz coluna e False caso contrário
     '''
     ## leitura do arquivo
-    nome = input("Digite o nome do arquivo com a matriz: ")
-    #with open(nome, 'r', encoding='utf-8') as arq:
-    #    texto = arq.read() #texto é string
-    #linhas = texto.strip().split('\n') #linhas é uma array com cada elemento sendo uma linha da matriz na forma de string
-    #transformando cada linha em uma array com os elementos sendo os elementos da linha
-    #for i in range(len(linhas)):
-    #    linhas[i] = np.fromstring(linhas[i], dtype=float, sep=' ')
-    np.loadtxt(nome)
-    return linhas
+    #verificando se será uma matriz coluna:
+    with open(nome, 'r', encoding='utf-8') as arq:
+        linhaString = arq.readline()
+    linhaArray = linhaString.strip().split(' ')
+    if len(linhaArray)==1:
+        return True
 #------------------------------------------------------------------
 def main():
     w = np.loadtxt(input("Digite o nome do arquivo com a matriz W: "))
-    a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
-    h = sist_simult(w,a)
-    if h != False:
-        for i in range(h.shape[0]):
-            print("x",i+1," = ", h[i,0])
+    arqA = input("Digite o nome do arquivo com a matriz A: ")
+    matrizEhColuna = matriz_coluna(arqA)
+    a = np.loadtxt(arqA)
+    h = sist_simult(w,a, matrizEhColuna)
+    if h.shape[0]>0:
+        print("matriz solução: ", h)
 #------------------------------------------------------------------
 
 #######################################################
