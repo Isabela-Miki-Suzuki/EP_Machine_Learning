@@ -6,7 +6,6 @@ EPSILON = pow(10, -5)
 # ------------------------------------------------
 # zera valores negativos de uma matriz
 def pos(m):
-    print(m)
     for i in range(m.shape[0]):
         for j in range(m.shape[1]):
             m[i,j] = max(EPSILON,m[i,j])
@@ -52,6 +51,7 @@ def mmq_alternado(a, w):
         a = a_copy.T
         # resolução do sistema At=Ht*Wt, nova aproximação de W não negativa
         w = pos(tarefa1.resol_sist(h, a, False)).T
+    print("w",w)
     return h
 # ------------------------------------------------
 def main():
@@ -59,7 +59,9 @@ def main():
     p = int(input("p = "))
     
     # Inicialização aleatória da matriz W nxp
-    w = np.ndarray(shape=(a.shape[0], p), dtype=float)
+#    w = np.ndarray(shape=(a.shape[0], p), dtype=float)
+    w = np.random.rand(a.shape[0], p)
+    print("w:",w)
     h = mmq_alternado(a, w)
     print(h)
 # ------------------------------------------------
