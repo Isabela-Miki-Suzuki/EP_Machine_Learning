@@ -90,7 +90,7 @@ def main():
     matrizEhColuna = matriz_coluna(arqA)
     a = np.loadtxt(arqA)
     h = resol_sist(w,a, matrizEhColuna)
-    if not any(s == False for s in h):
+    if h.shape[0]>1 or h[0]!=False:
         print("matriz solução: ", h)
 #------------------------------------------------------------------
 
