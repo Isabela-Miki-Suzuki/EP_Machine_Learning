@@ -9,10 +9,11 @@ def rot_givens(w,i,j,k,c,s,m):
     m é o número de colunas da matriz
     '''
     if m > 1:
-        for r in range(k, m):
-            aux = c * w[i,r] - s * w[j,r]
-            w[j,r] = s * w[i,r] + c * w[j,r]
-            w[i,r] = aux
+        w[i,k:m], w[j,k:m] = c * w[i,k:m] - s * w[j,k:m], s * w[i,k:m] + c * w[j,k:m]
+        #for r in range(k, m):
+        #    aux = c * w[i,r] - s * w[j,r]
+        #    w[j,r] = s * w[i,r] + c * w[j,r]
+        #    w[i,r] = aux
     else:
             aux = c * w[i] - s * w[j]
             w[j] = s * w[i] + c * w[j]
