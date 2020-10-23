@@ -47,11 +47,11 @@ def mmq_alternado(a, w):
             break
         err_anterior = err
         # transpotas das matrizes
-        h = h.T
-        a = a_copy.T
+        h = h.T.copy()
+        a = a_copy.T.copy()
         # resolução do sistema At=Ht*Wt, nova aproximação de W não negativa
-        w = pos(tarefa1.resol_sist(h, a, False)).T
-    print("w",w)
+        w = pos(tarefa1.resol_sist(h, a, False)).T.copy()
+#    print("w",w)
     return h
 # ------------------------------------------------
 def main():
