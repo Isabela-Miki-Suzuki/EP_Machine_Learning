@@ -2,7 +2,7 @@ from math import *
 import numpy as np
 import tarefa1
 
-EPSILON = pow(10, -5)
+EPSILON = pow(10, -8)
 
 
 # ------------------------------------------------
@@ -16,8 +16,8 @@ def pos(w):
 # normalização das colunas de uma matriz
 def normalize_col(w, n, p):
     for j in range(p):
-        w[0:n, j] = w[0:n, j] / sqrt((w[0:n, j] ** 2).sum())
-    return w
+        s = sqrt((w[0:n, j] ** 2).sum())
+        w[0:n, j] = w[0:n, j] / s
 
 
 # ------------------------------------------------
@@ -52,11 +52,11 @@ def main():
     # Inicialização aleatória da matriz W nxp
     w = np.random.rand(n, p)
     h = mmq_alternado(a, w, n, m, p)
-    print(h)
+    print("h: ", h)
     #print(w)
-    #print(w @ h)
-    
-    
+    print("w*h: ", w @ h)
+
+
 # ------------------------------------------------
 if __name__ == "__main__":
     main()
