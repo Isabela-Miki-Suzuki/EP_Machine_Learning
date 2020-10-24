@@ -30,7 +30,7 @@ def normalize_col(m):
             m[i,j] = m[i,j] / somatorio
 # ------------------------------------------------
 def mmq_alternado(a, w):
-    itmax = 100
+    itmax = 10000
     count = 0
     err_anterior = 0.
     a_copy = a.copy()  # cópia da matriz A
@@ -51,17 +51,16 @@ def mmq_alternado(a, w):
         a = a_copy.T.copy()
         # resolução do sistema At=Ht*Wt, nova aproximação de W não negativa
         w = pos(tarefa1.resol_sist(h, a, False)).T.copy()
-#    print("w",w)
+        print("oi",w)
+    print("A:", w@h)
     return h
 # ------------------------------------------------
 def main():
     a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
     p = int(input("p = "))
-    
-    # Inicialização aleatória da matriz W nxp
+        # Inicialização aleatória da matriz W nxp
 #    w = np.ndarray(shape=(a.shape[0], p), dtype=float)
     w = np.random.rand(a.shape[0], p)
-    print("w:",w)
     h = mmq_alternado(a, w)
     print(h)
 # ------------------------------------------------
