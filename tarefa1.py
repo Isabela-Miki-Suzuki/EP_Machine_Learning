@@ -63,9 +63,10 @@ def matriz_coluna(nome):
 # ------------------------------------------------------------------
 def main():
     a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
+    n = a.shape[0]
     if a.ndim == 1:  # converte array 1D em matriz coluna
         a = a.reshape(n, 1)
-    n, m = a.shape[0], a.shape[1]
+    m = a.shape[1]
     w = np.loadtxt(input("Digite o nome do arquivo com a matriz W: "))
     p = w.shape[1]
 
