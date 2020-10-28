@@ -1,6 +1,5 @@
 import math
 import numpy as np
-import tarefa2
 # ------------------------------------------------------------------
 def permut(w, linha1, linha2):
     '''(list, int, int) -> '''
