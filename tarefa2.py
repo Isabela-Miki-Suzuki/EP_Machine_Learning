@@ -4,22 +4,17 @@ import tarefa1
 
 EPSILON = pow(10, -8)
 
-
 # ------------------------------------------------
 # troca valores negativos de uma matriz por EPSILON
 def pos(w):
     # não tenho certeza se pode isso, seria bom perguntar pro Saulo
     return np.where(w <= 0, EPSILON, w)
-
-
 # ------------------------------------------------
 # normalização das colunas de uma matriz
 def normalize_col(w, n, p):
     for j in range(p):
         s = sqrt((w[0:n, j] ** 2).sum())
         w[0:n, j] = w[0:n, j] / s
-
-
 # ------------------------------------------------
 def mmq_alternado(a, w, n, m, p):
     itmax = 100
@@ -37,9 +32,8 @@ def mmq_alternado(a, w, n, m, p):
             break
         # resolução do sistema At=Ht*Wt, nova aproximação de W não negativa
         w = pos(tarefa1.resol_sist(a.T.copy(), h.T, m, n, p).T)
+    print("w:", w)
     return h
-
-
 # ------------------------------------------------
 def main():
     a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
@@ -53,10 +47,6 @@ def main():
     w = np.random.rand(n, p)
     h = mmq_alternado(a, w, n, m, p)
     print("h: ", h)
-    #print(w)
-    print("w*h: ", w @ h)
-
-
 # ------------------------------------------------
 if __name__ == "__main__":
     main()

@@ -1,6 +1,6 @@
 import math
 import numpy as np
-
+import tarefa2
 # ------------------------------------------------------------------
 def permut(w, linha1, linha2):
     '''(list, int, int) -> '''
@@ -15,14 +15,11 @@ def rot_givens(w, p, i, j, k, c, s):
     '''
     w[i, k:p], w[j, k:p] = c * w[i, k:p] - s * w[j, k:p], s * w[i, k:p] + c * w[j, k:p]
 # ------------------------------------------------------------------
-def resol_sist(a, w, n, m, p):
-    ''' ( array, array, int, int, int) -> (array)/(bool)
+def triangularizacao_r_g(a, w, n, m, p):
+    ''' ( array, array, int, int, int) ->
     RECEBE uma matriz A(nxm) e uma matriz W(nxp), ambas no formato de numpy.array
-    de floats.
-    RETORNA uma matriz no formato numpy.array de floats que representa a
-    aproximação para a solução do sistema W*H=A.
-    '''
-    # triangularização
+    de floats e aplica o método de rotação de givens para triangularizar w    
+    '''    
     for k in range(p):  # para cada coluna de w
         # varrendo as linhas da última até chegar no elemento anterior ao da diaginal
         for j in range(n - 1, k, -1):
@@ -38,6 +35,43 @@ def resol_sist(a, w, n, m, p):
                     c = s * t
                 rot_givens(w, p, i, j, k, c, s)
                 rot_givens(a, m, i, j, 0, c, s)
+# ------------------------------------------------------------------
+def triangularizacao_h(a, w, n, m, p):
+    ''' ( array, array, int, int, int) ->
+    RECEBE uma matriz A(nxm) e uma matriz W(nxp), ambas no formato de numpy.array
+    de floats e aplica o método de Householder para triangularizar w (encontra R,
+    da decomposição QR)
+
+    OBSERVAÇÂO: foram consultados os seguintes links para a implementação desta função:
+    http://www.cs.cornell.edu/~bindel/class/cs6210-f12/notes/lec16.pdf
+    https://math.dartmouth.edu/~m116w17/Householder.pdf
+    http://mlwiki.org/index.php/Householder_Transformation
+    '''    
+    for k in range(p): #para cada coluna de W
+        x = w[k:,k] # w[k:,k] é uma matriz coluna do tipo numpy.ndarray e é formada pelos elementos das linhas
+                    # a partir de k na coluna k
+        norm_x = math.sqrt((x[0:] ** 2).sum()) #norma do vetor
+        rho = -np.sign(x[0])
+        uk = x[0] - rho * norm_x
+        u = x / uk
+        u[0] = 1
+        beta = -rho * uk / norm_x
+
+        w[k:, :] = w[k:, :] - beta * np.outer(u, u).dot(w[k:, :])
+        a[k:, :] = a[k:, :] - beta * np.outer(u, u).dot(a[k:, :])        
+
+# ------------------------------------------------------------------
+def resol_sist(a, w, n, m, p):
+    ''' ( array, array, int, int, int) -> (array)/(bool)
+    RECEBE uma matriz A(nxm) e uma matriz W(nxp), ambas no formato de numpy.array
+    de floats.
+    RETORNA uma matriz no formato numpy.array de floats que representa a
+    aproximação para a solução do sistema W*H=A.
+    '''
+    # triangularização
+    triangularizacao_r_g(a,w,n,m,p)
+    #triangularizacao_h(a,w,n,m,p)
+    print(w)
     h = np.empty((p, m))  # a matriz resolução
     for k in range(p - 1, -1, -1):
         for j in range(m):  # resolvendo os sistemas simultâneos
@@ -48,32 +82,24 @@ def resol_sist(a, w, n, m, p):
                 return np.array([False])  # devolve uma array de único elemento o boolean False
     return h
 # ------------------------------------------------------------------
-def matriz_coluna(nome):
-    ''' (str)-> (bool)
-    RECEBE o nome do arquivo
-    RETORNA True caso o arquivo seje uma matriz coluna e False caso contrário
-    '''
-    ## leitura do arquivo
-    # verificando se será uma matriz coluna:
-    with open(nome, 'r', encoding='utf-8') as arq:
-        linhaString = arq.readline()
-    linhaArray = linhaString.strip().split(' ')
-    if len(linhaArray) == 1:
-        return True
-# ------------------------------------------------------------------
 def main():
+    w = np.loadtxt(input("Digite o nome do arquivo com a matriz W: "))
+    p = w.shape[1]
     a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
     n = a.shape[0]
     if a.ndim == 1:  # converte array 1D em matriz coluna
         a = a.reshape(n, 1)
     m = a.shape[1]
-    w = np.loadtxt(input("Digite o nome do arquivo com a matriz W: "))
-    p = w.shape[1]
 
     h = resol_sist(a, w, n, m, p)
     if h.shape[0] > 1 or h[0] != False:
         print("matriz solução: ", h)
-        #print("w*h: ", w@h)
+    for i in range(h.shape[0]): #para cada linha
+        for j in range(h.shape[1]-1): #para cada coluna
+            print(h[i,j], end = " & ")
+        print(h[i,h.shape[1]-1], end = "\\")
+        print("\\")
+
 # ------------------------------------------------------------------
 
 #######################################################
