@@ -17,8 +17,8 @@ def estatisticas(digitos, n_test):
 	'''
 	np.savetxt("teste_digitos_teste", digitos)
 	test_index = np.loadtxt("test_index.txt", dtype=int)
-	acertos = np.empty((10), dtype=int)
-	total = np.empty((10), dtype=int)
+	acertos = np.zeros((10), dtype=int)
+	total = np.zeros((10), dtype=int)
 	for i in range(n_test):
 		if test_index[i] == digitos[i]:
 			acertos[test_index[i]]+=1
@@ -60,7 +60,7 @@ def main():
 
 	t_i = np.loadtxt("test_images.txt")#matriz 2D de 784 x n_test que apresenta as imagens testes nas suas colunas (queremos saber qual é o dígito)
 	test_images = t_i[0:n,0:n_test] #redimensionando 
-	digitos = np.empty((n_test),dtype=int) # o dígito mais provável de a imagem ser
+	digitos = np.zeros((n_test),dtype=int) # o dígito mais provável de a imagem ser
 	erros = np.empty((n_test)) # o erro de tal imagem para o dígito
 	for i in range(10): #para cada dígito
 		h = tarefa1.resol_sist(test_images.copy(), w_digitos[i].copy(), n, n_test, p) #a solução do sistema para cada dígito
