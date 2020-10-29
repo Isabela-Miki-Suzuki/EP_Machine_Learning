@@ -70,7 +70,6 @@ def resol_sist(a, w, n, m, p):
     # triangularização
     triangularizacao_r_g(a,w,n,m,p)
     #triangularizacao_h(a,w,n,m,p)
-    print(w)
     h = np.empty((p, m))  # a matriz resolução
     for k in range(p - 1, -1, -1):
         for j in range(m):  # resolvendo os sistemas simultâneos

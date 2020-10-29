@@ -32,8 +32,7 @@ def mmq_alternado(a, w, n, m, p):
             break
         # resolução do sistema At=Ht*Wt, nova aproximação de W não negativa
         w = pos(tarefa1.resol_sist(a.T.copy(), h.T, m, n, p).T)
-    print("w:", w)
-    return h
+    return h,w
 # ------------------------------------------------
 def main():
     a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
@@ -45,7 +44,7 @@ def main():
 
     # Inicialização aleatória da matriz W nxp
     w = np.random.rand(n, p)
-    h = mmq_alternado(a, w, n, m, p)
+    h,w = mmq_alternado(a, w, n, m, p)
     print("h: ", h)
 # ------------------------------------------------
 if __name__ == "__main__":
