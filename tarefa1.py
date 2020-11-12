@@ -91,12 +91,13 @@ def main():
 
     h = resol_sist(a, w, n, m, p)
     if h.shape[0] > 1 or h[0] != False:
-        print("matriz solução: ", h)
-    for i in range(h.shape[0]): #para cada linha
-        for j in range(h.shape[1]-1): #para cada coluna
-            print(h[i,j], end = " & ")
-        print(h[i,h.shape[1]-1], end = "\\")
-        print("\\")
+        print("matriz solução")
+        print(h)
+    #for i in range(h.shape[0]): #para cada linha
+    #    for j in range(h.shape[1]-1): #para cada coluna
+    #        print(h[i,j], end = " & ")
+    #    print(h[i,h.shape[1]-1], end = "\\")
+    #    print("\\")
 
 # ------------------------------------------------------------------
 
