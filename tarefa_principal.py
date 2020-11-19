@@ -3,6 +3,8 @@ import numpy as np
 import tarefa1
 import tarefa2
 import matplotlib.pyplot as plt
+import time
+import argparse
 #--------------------------------------------------------------------------------------------------
 def estatisticas(digitos, n_test):
 	'''(array, int) -> (float, array, array)
@@ -15,7 +17,6 @@ def estatisticas(digitos, n_test):
 	para este dígito
 	(comparando o array digitos com test_index.txt)
 	'''
-	np.savetxt("teste_digitos_teste", digitos)
 	test_index = np.loadtxt("test_index.txt", dtype=int)
 	acertos = np.zeros((10), dtype=int)
 	total = np.zeros((10), dtype=int)
@@ -34,7 +35,7 @@ def norm(w,col,n):
 	'''
 	return sqrt((w[0:n, col] ** 2).sum())
 #--------------------------------------------------------------------------------------------------
-def main(): 
+def main():
 	ndig_treino = int((input("Digite o valor de ndig_treino: "))) # n° de colunas das matrizes Wd (n° de imagens para o treino)
 	n_test = int((input("Digite o valor de n_test: "))) # n° de colunas da matriz A, com todas as imagens(quantidade de imagens a serem testadas)
 	p = int(input("Digite o valor de p: "))
@@ -43,6 +44,7 @@ def main():
 	w_digitos = np.empty((10,n,p)) #array com a matriz 
 
 	for i in range(10):
+		start_time_w = time.time()
 		t = np.loadtxt("train_dig"+str(i)+".txt")
 		print()
 		train_dig = t[0:n,0:ndig_treino]/255
@@ -50,6 +52,8 @@ def main():
 		w_digitos[i] = np.random.rand(n, p)
 		h,w_digitos[i] = tarefa2.mmq_alternado(train_dig, w_digitos[i].copy(), n, ndig_treino, p)
 
+		elapsed_time_w = time.time() - start_time_w
+		print("  Tempo de execucao treinamento: "+str(elapsed_time_w)+" segundos")
 
 #TESTANDO:
 #		for k in range(p):
@@ -58,6 +62,7 @@ def main():
 #			plt.imshow(matriz, cmap=plt.get_cmap("gray"))
 #			plt.show()
 
+	start_time_teste_imagens = time.time()
 	t_i = np.loadtxt("test_images.txt")#matriz 2D de 784 x n_test que apresenta as imagens testes nas suas colunas (queremos saber qual é o dígito)
 	test_images = t_i[0:n,0:n_test] #redimensionando 
 	digitos = np.zeros((n_test),dtype=int) # o dígito mais provável de a imagem ser
@@ -77,6 +82,8 @@ def main():
 	print("percentual total: ", percentual, "%")
 	print("acertos por dígito", acertos)
 	print("percentual de acertos por dígito", percentual_digito)
+	elapsed_time_teste_imagens = time.time() - start_time_teste_imagens
+	print("  Tempo de execucao teste imagens: "+str(elapsed_time_teste_imagens)+" segundos")
 # ------------------------------------------------
 if __name__ == "__main__":
     main()
