@@ -2,7 +2,7 @@ from math import *
 import numpy as np
 import tarefa1
 
-EPSILON = pow(10, -8)
+EPSILON = pow(10, -5)
 
 # ------------------------------------------------
 # troca valores negativos de uma matriz por EPSILON
@@ -45,6 +45,7 @@ def main():
     # Inicialização aleatória da matriz W nxp
     w = np.random.rand(n, p)
     h,w = mmq_alternado(a, w, n, m, p)
+    print("w", w)
     print("h: ", h)
 # ------------------------------------------------
 if __name__ == "__main__":
