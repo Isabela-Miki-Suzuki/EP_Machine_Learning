@@ -7,31 +7,28 @@ EPSILON = pow(10, -5)
 # ------------------------------------------------
 # troca valores negativos de uma matriz por EPSILON
 def pos(w):
-    # não tenho certeza se pode isso, seria bom perguntar pro Saulo
     return np.where(w <= 0, EPSILON, w)
 # ------------------------------------------------
 # normalização das colunas de uma matriz
-def normalize_col(w, n, p):
-    for j in range(p):
-        s = sqrt((w[0:n, j] ** 2).sum())
-        w[0:n, j] = w[0:n, j] / s
+def normalize_col(w):
+    return w / np.sqrt(np.sum(w ** 2, axis=0))
 # ------------------------------------------------
-def mmq_alternado(a, w, n, m, p):
+def mmq_alternado(a, w, n, m, p, method):
     itmax = 100
-    count = 0
-    err = 0.
+    err_anterior = 0.
 
-    while True:
-        normalize_col(w, n, p)
-        # resolução do sistema A=W*H, H é uma matriz pxm não negativa
-        h = pos(tarefa1.resol_sist(a.copy(), w.copy(), n, m, p))
-        err_anterior = err
+    for _ in range(itmax):
+        w = normalize_col(w)
+        # resolução do sistema W*H=A, H é uma matriz pxm não negativa
+        h = pos(tarefa1.resol_sist(a.copy(), w.copy(), n, m, p, method))
+
         err = ((a - w @ h) ** 2).sum()  # cálculo do novo erro
-        count += 1  # incrementa o contador
-        if (abs(err - err_anterior) < EPSILON) or (count >= itmax):
+        if (abs(err - err_anterior) < EPSILON):
             break
-        # resolução do sistema At=Ht*Wt, nova aproximação de W não negativa
-        w = pos(tarefa1.resol_sist(a.T.copy(), h.T, m, n, p).T)
+        err_anterior = err
+
+        # resolução do sistema Ht*Wt=At, nova aproximação de W não negativa
+        w = pos(tarefa1.resol_sist(a.T.copy(), h.T, m, n, p, method).T)
     return h,w
 # ------------------------------------------------
 def main():
@@ -42,11 +39,18 @@ def main():
     m = a.shape[1]
     p = int(input("Digite o valor de p: "))
 
+    method = False 
+    if input("Digite o método que deseja utilisar: ") == "g": # método utilizado será a rotação de givens("g") ou householder("h") dependendo do input
+        method = True
+
     # Inicialização aleatória da matriz W nxp
     w = np.random.rand(n, p)
-    h,w = mmq_alternado(a, w, n, m, p)
-    print("w", w)
-    print("h: ", h)
+    h,w = mmq_alternado(a, w, n, m, p, method)
+    print("W: ", w)
+    print("H: ", h)
+    print("W*H: ", w@h)
 # ------------------------------------------------
 if __name__ == "__main__":
     main()
+
+
