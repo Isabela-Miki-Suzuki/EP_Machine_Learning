@@ -36,6 +36,13 @@ def error(w):
 	'''
 	return np.sqrt(np.sum(w ** 2, axis=0))
 #--------------------------------------------------------------------------------------------------
+def visualize_images() #imprime imagens
+		#for k in range(p):
+		#	matriz = w_digitos[i,:,k].reshape(int(sqrt(n)),int(sqrt(n))).copy()*255
+		#	plt.imshow(matriz)
+		#	plt.imshow(matriz, cmap=plt.get_cmap("gray"))
+		#	plt.show()
+#--------------------------------------------------------------------------------------------------
 def main():
 	ndig_treino = int((input("Digite o valor de ndig_treino: "))) # n° de colunas das matrizes train_dig(n° de imagens para o treinamento)
 	n_test = int((input("Digite o valor de n_test: "))) # n° de colunas da matriz A(quantidade de imagens a serem testadas)
@@ -63,13 +70,6 @@ def main():
 		elapsed_time_w = time.time() - start_time_w
 		print("  Tempo para o treinamento do dígito " + str(i) + ": " + str(elapsed_time_w) + " segundos")
 
-		#imprime imagens
-		#for k in range(p):
-		#	matriz = w_digitos[i,:,k].reshape(int(sqrt(n)),int(sqrt(n))).copy()*255
-		#	plt.imshow(matriz)
-		#	plt.imshow(matriz, cmap=plt.get_cmap("gray"))
-		#	plt.show()
-
 	# Classificação das imagens teste
 	t_i = np.loadtxt("test_images.txt") # matriz 2D contendo as imagens testes nas suas colunas
 	test_images = t_i[0:n,0:n_test]/255 # redimensionando para uma matriz 784 x n_test
@@ -84,7 +84,7 @@ def main():
 				digitos[j] = i
 				erros[j] = erro_dig[j]
 	
-	print("  Tempo total de execução: " +str(time.time() - start)+ " segundos")
+	print("  Tempo total de execução: " + str(time.time() - start) + " segundos")
 
 	# Estatísticas
 	percentual, acertos, percentual_digito = estatisticas(digitos, n_test)
