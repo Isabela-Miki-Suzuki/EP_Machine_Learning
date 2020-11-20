@@ -46,7 +46,6 @@ def main():
 	for i in range(10):
 		start_time_w = time.time()
 		t = np.loadtxt("train_dig"+str(i)+".txt")
-		print()
 		train_dig = t[0:n,0:ndig_treino]/255
 
 		w_digitos[i] = np.random.rand(n, p)
