@@ -36,12 +36,30 @@ def error(w):
 	'''
 	return np.sqrt(np.sum(w ** 2, axis=0))
 #--------------------------------------------------------------------------------------------------
-def visualize_images() #imprime imagens
-		#for k in range(p):
-		#	matriz = w_digitos[i,:,k].reshape(int(sqrt(n)),int(sqrt(n))).copy()*255
-		#	plt.imshow(matriz)
-		#	plt.imshow(matriz, cmap=plt.get_cmap("gray"))
-		#	plt.show()
+def visualize_images(image, w_d, n, p, method): 
+	''' ( array 1D, array 2D, int, int, Boolean ) ->
+	RECEBE uma imagem i e um classificador Wd (nxp). Calcula a imagem
+	mais próxima pela combinação linear das imagens em Wd pelo método indicado. Imprime ambas imagens
+	'''
+	axes=[]
+	fig=plt.figure()
+	
+	h = tarefa1.resol_sist(image.copy(), w_d.copy(), n, 1, p, method)
+	image_approx = (w_d@h).reshape(int(sqrt(n)),int(sqrt(n)))*255
+	axes.append(fig.add_subplot(1, 2, 2))
+	subplot_title=("Imagem aproximada")
+	axes[-1].set_title(subplot_title)
+	plt.imshow(image_approx, cmap=plt.get_cmap("gray"))
+	
+	image = image.reshape(int(sqrt(n)),int(sqrt(n)))*255 
+	axes.append(fig.add_subplot(1, 2, 1))
+	subplot_title=("Imagem teste")
+	axes[-1].set_title(subplot_title)
+	plt.imshow(image, cmap=plt.get_cmap("gray"))
+	
+	fig.tight_layout()
+	plt.show()
+		
 #--------------------------------------------------------------------------------------------------
 def main():
 	ndig_treino = int((input("Digite o valor de ndig_treino: "))) # n° de colunas das matrizes train_dig(n° de imagens para o treinamento)
@@ -83,9 +101,14 @@ def main():
 			if erro_dig[j] < erros[j]: # armazena o menor erro e o dígito com menor erro
 				digitos[j] = i
 				erros[j] = erro_dig[j]
-	
-	print("  Tempo total de execução: " + str(time.time() - start) + " segundos")
 
+	print("  Tempo total de execução: " + str(time.time() - start) + " segundos")
+ 	
+	# Impressão da imagem i e sua aproximação
+	#i = 0 # imagem i que será impressa
+	#d = digitos[i] # dígito d ao qual ela foi classificada
+	#visualize_images(test_images[:, i].copy().reshape(n, 1), w_digitos[d].copy(), n, p, method)
+	
 	# Estatísticas
 	percentual, acertos, percentual_digito = estatisticas(digitos, n_test)
 	print("percentual total: ", percentual, "%")
