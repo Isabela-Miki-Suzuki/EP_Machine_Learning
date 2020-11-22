@@ -68,7 +68,7 @@ def main():
 	n = int(input("Digite o valor de n: ")) # n° de linhas das matrizes Wd
 
 	method = False 
-	if input("Digite o método que deseja utilisar: ") == "g": # método utilizado será a rotação de givens("g") ou householder("h") dependendo do input
+	if input("Digite o método que deseja utilizar: ") == "g": # método utilizado será a rotação de givens("g") ou householder("h") dependendo do input
 		method = True
 
 	start = time.time()
