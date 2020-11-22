@@ -49,7 +49,7 @@ def triang_h(a, w, p, n, m):
         u[0] = 1
         beta = -rho * uk / norm_x
 
-        w[k:n, 0:p] = w[k:n, 0:p] - beta * np.outer(u, u).dot(w[k:n, 0:p])
+        w[k:n, k:p] = w[k:n, k:p] - beta * np.outer(u, u).dot(w[k:n, k:p])
         a[k:n, 0:m] = a[k:n, 0:m] - beta * np.outer(u, u).dot(a[k:n, 0:m])
 
 # ------------------------------------------------------------------
@@ -85,9 +85,8 @@ def main():
         method = True
 
     h = resol_sist(a.copy(), w.copy(), n, m, p, method)
-    if h.shape[0] > 1 or h[0] != False:
-        print("Matriz solução:")
-        print(h)
+    print("Matriz solução:")
+    print(h)
 # ------------------------------------------------------------------
 
 #######################################################
