@@ -4,6 +4,8 @@ Python 3.10.12
 
 ## Execution examples:
 
+### rotations_and_system_solving
+
 $ python3 rotations_and_system_solving.py 
 
 Enter the name of the file in this directory with the matrix W (W*H=A): test_2.4_a_w
@@ -141,6 +143,8 @@ Solution matrix: H =
  [0.01538462]
  
  [0.49230769]]
+
+### decomposition
 
 $ python3 decomposition.py 
 
@@ -409,6 +413,8 @@ W*H:  [[ 1.36607909e+00  1.08507787e+00 -4.78859495e-17]
  [ 1.39982141e+02  1.71538216e-02 -7.57021280e-19]
 
  [ 1.42218294e+02  5.03144844e-05 -2.22044605e-21]]
+
+### digit_classifier
 
 $ python3 digit_classifier.py 
 
