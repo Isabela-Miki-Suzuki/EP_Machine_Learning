@@ -44,7 +44,7 @@ def visualize_images(image, w_d, n, p, method):
 	axes=[]
 	fig=plt.figure()
 	
-	h = tarefa1.resol_sist(image.copy(), w_d.copy(), n, 1, p, method)
+	h = rotations_and_system_solving.resol_sist(image.copy(), w_d.copy(), n, 1, p, method)
 	image_approx = (w_d@h).reshape(int(sqrt(n)),int(sqrt(n)))*255
 	axes.append(fig.add_subplot(1, 2, 2))
 	subplot_title=("Approximate image")
@@ -68,7 +68,7 @@ def main():
 	n = int(input("Enter the number of rows of the classifier matrices (n = 784 for the files in this repository): ")) # n° de linhas das matrizes Wd
 
 	method = False 
-	if input("Digite o método que deseja utilizar: ") == "g": # método utilizado será a rotação de givens("g") ou householder("h") dependendo do input
+	if input("Enter the method you want to use (g for givens and h for householder): ") == "g": # método utilizado será a rotação de givens("g") ou householder("h") dependendo do input
 		method = True
 
 	start = time.time()
@@ -83,7 +83,7 @@ def main():
 		# decomposição da matriz train_dig
 		w_digitos[i] = np.random.rand(n, p)
 
-		h,w_digitos[i] = tarefa2.mmq_alternado(train_dig, w_digitos[i], n, ndig_treino, p, method)
+		h,w_digitos[i] = decomposition.mmq_alternado(train_dig, w_digitos[i], n, ndig_treino, p, method)
 
 		elapsed_time_w = time.time() - start_time_w
 		print("  Time for digit training " + str(i) + ": " + str(elapsed_time_w) + " seconds")
@@ -95,7 +95,7 @@ def main():
 	erros = np.repeat(float_info.max, n_test) # o erro da imagem para o dígito mais provável
 
 	for i in range(10): # para cada dígito
-		h = tarefa1.resol_sist(test_images.copy(), w_digitos[i].copy(), n, n_test, p, method) # a solução do sistema para cada dígito
+		h = rotations_and_system_solving.resol_sist(test_images.copy(), w_digitos[i].copy(), n, n_test, p, method) # a solução do sistema para cada dígito
 		erro_dig = error(test_images - w_digitos[i]@h) # o erro da imagem para o dígito
 		for j in range(n_test): # para cada imagem
 			if erro_dig[j] < erros[j]: # armazena o menor erro e o dígito com menor erro

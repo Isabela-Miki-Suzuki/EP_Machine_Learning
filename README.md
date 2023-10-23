@@ -410,3 +410,45 @@ W*H:  [[ 1.36607909e+00  1.08507787e+00 -4.78859495e-17]
 
  [ 1.42218294e+02  5.03144844e-05 -2.22044605e-21]]
 
+$ python3 digit_classifier.py 
+
+Enter the number of images for training (suggestions are 100, 1000 or 4000): 100
+
+Enter the number of images to be tested (suggestion is 10000): 10000
+
+Enter the number of columns of the classifier matrices (suggestions are 5, 10 or 15): 5
+
+Enter the number of rows of the classifier matrices (n = 784 for the files in this repository): 784
+
+Enter the method you want to use (g for givens and h for householder): h
+
+  Time for digit training 0: 4.848875045776367 seconds
+
+  Time for digit training 1: 4.8349809646606445 seconds
+
+  Time for digit training 2: 4.432573080062866 seconds
+
+  Time for digit training 3: 5.146498680114746 seconds
+
+  Time for digit training 4: 5.045586585998535 seconds
+
+  Time for digit training 5: 3.9044547080993652 seconds
+
+  Time for digit training 6: 5.18614935874939 seconds
+
+  Time for digit training 7: 5.466777563095093 seconds
+
+  Time for digit training 8: 5.540260553359985 seconds
+
+  Time for digit training 9: 6.8912131786346436 seconds
+
+  Total execution time: 71.07713055610657 seconds
+
+Total percentage of correct answers:  87.89 %
+
+Number of correct answers by digit [ 954 1128  876  861  771  742  891  902  776  888]
+
+Percentage of correct answers per digit [97.34693878 99.38325991 84.88372093 85.24752475 78.51323829 83.1838565
+
+ 93.00626305 87.74319066 79.67145791 88.00792864]
+
