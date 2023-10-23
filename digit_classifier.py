@@ -2,8 +2,8 @@ from math import *
 from sys import float_info
 
 import numpy as np
-import tarefa1
-import tarefa2
+import rotations_and_system_solving
+import decomposition
 import matplotlib.pyplot as plt
 import time
 #--------------------------------------------------------------------------------------------------
@@ -47,13 +47,13 @@ def visualize_images(image, w_d, n, p, method):
 	h = tarefa1.resol_sist(image.copy(), w_d.copy(), n, 1, p, method)
 	image_approx = (w_d@h).reshape(int(sqrt(n)),int(sqrt(n)))*255
 	axes.append(fig.add_subplot(1, 2, 2))
-	subplot_title=("Imagem aproximada")
+	subplot_title=("Approximate image")
 	axes[-1].set_title(subplot_title)
 	plt.imshow(image_approx, cmap=plt.get_cmap("gray"))
 	
 	image = image.reshape(int(sqrt(n)),int(sqrt(n)))*255 
 	axes.append(fig.add_subplot(1, 2, 1))
-	subplot_title=("Imagem teste")
+	subplot_title=("Test image")
 	axes[-1].set_title(subplot_title)
 	plt.imshow(image, cmap=plt.get_cmap("gray"))
 	
@@ -62,10 +62,10 @@ def visualize_images(image, w_d, n, p, method):
 		
 #--------------------------------------------------------------------------------------------------
 def main():
-	ndig_treino = int((input("Digite o valor de ndig_treino: "))) # n° de colunas das matrizes train_dig(n° de imagens para o treinamento)
-	n_test = int((input("Digite o valor de n_test: "))) # n° de colunas da matriz A(quantidade de imagens a serem testadas)
-	p = int(input("Digite o valor de p: ")) # n° de colunas das matrizes Wd
-	n = int(input("Digite o valor de n: ")) # n° de linhas das matrizes Wd
+	ndig_treino = int((input("Enter the number of images for training (suggestions are 100, 1000 or 4000): "))) # n° de colunas das matrizes train_dig(n° de imagens para o treinamento)
+	n_test = int((input("Enter the number of images to be tested (suggestion is 10000): "))) # n° de colunas da matriz A(quantidade de imagens a serem testadas)
+	p = int(input("Enter the number of columns of the classifier matrices (suggestions are 5, 10 or 15): ")) # n° de colunas das matrizes Wd
+	n = int(input("Enter the number of rows of the classifier matrices (n = 784 for the files in this repository): ")) # n° de linhas das matrizes Wd
 
 	method = False 
 	if input("Digite o método que deseja utilizar: ") == "g": # método utilizado será a rotação de givens("g") ou householder("h") dependendo do input
@@ -86,7 +86,7 @@ def main():
 		h,w_digitos[i] = tarefa2.mmq_alternado(train_dig, w_digitos[i], n, ndig_treino, p, method)
 
 		elapsed_time_w = time.time() - start_time_w
-		print("  Tempo para o treinamento do dígito " + str(i) + ": " + str(elapsed_time_w) + " segundos")
+		print("  Time for digit training " + str(i) + ": " + str(elapsed_time_w) + " seconds")
 
 	# Classificação das imagens teste
 	t_i = np.loadtxt("test_images.txt") # matriz 2D contendo as imagens testes nas suas colunas
@@ -102,7 +102,7 @@ def main():
 				digitos[j] = i
 				erros[j] = erro_dig[j]
 
-	print("  Tempo total de execução: " + str(time.time() - start) + " segundos")
+	print("  Total execution time: " + str(time.time() - start) + " seconds")
  	
 	# Impressão da imagem i e sua aproximação
 	#i = 0 # imagem i que será impressa
@@ -111,9 +111,9 @@ def main():
 	
 	# Estatísticas
 	percentual, acertos, percentual_digito = estatisticas(digitos, n_test)
-	print("percentual total: ", percentual, "%")
-	print("acertos por dígito", acertos)
-	print("percentual de acertos por dígito", percentual_digito)
+	print("Total percentage of correct answers: ", percentual, "%")
+	print("Number of correct answers by digit", acertos)
+	print("Percentage of correct answers per digit", percentual_digito)
 # ------------------------------------------------
 if __name__ == "__main__":
     main()

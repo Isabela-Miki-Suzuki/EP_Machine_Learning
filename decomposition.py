@@ -1,6 +1,6 @@
 from math import *
 import numpy as np
-import tarefa1
+import rotations_and_system_solving
 
 EPSILON = pow(10, -5)
 
@@ -20,7 +20,7 @@ def mmq_alternado(a, w, n, m, p, method):
     for _ in range(itmax):
         w = normalize_col(w)
         # resolução do sistema W*H=A, H é uma matriz pxm não negativa
-        h = pos(tarefa1.resol_sist(a.copy(), w.copy(), n, m, p, method))
+        h = pos(rotations_and_system_solving.resol_sist(a.copy(), w.copy(), n, m, p, method))
 
         err = ((a - w @ h) ** 2).sum()  # cálculo do novo erro
         if (abs(err - err_anterior) < EPSILON):
@@ -28,19 +28,19 @@ def mmq_alternado(a, w, n, m, p, method):
         err_anterior = err
 
         # resolução do sistema Ht*Wt=At, nova aproximação de W não negativa
-        w = pos(tarefa1.resol_sist(a.T.copy(), h.T, m, n, p, method).T)
+        w = pos(rotations_and_system_solving.resol_sist(a.T.copy(), h.T, m, n, p, method).T)
     return h,w
 # ------------------------------------------------
 def main():
-    a = np.loadtxt(input("Digite o nome do arquivo com a matriz A: "))
+    a = np.loadtxt(input("Enter the name of the file in this directory with the matrix A, which will be decomposed as the product of 2 matrices (A = W*H) : "))
     n = a.shape[0]
     if a.ndim == 1:
         a = a.reshape(n, 1)
     m = a.shape[1]
-    p = int(input("Digite o valor de p: "))
+    p = int(input("Enter the value of p, the number of columns of the first matrix in the composition (Wnxp): "))
 
     method = False 
-    if input("Digite o método que deseja utilisar: ") == "g": # método utilizado será a rotação de givens("g") ou householder("h") dependendo do input
+    if input("Enter the method you want to use (g for givens and h for householder): ") == "g": # método utilizado será a rotação de givens("g") ou householder("h") dependendo do input
         method = True
 
     # Inicialização aleatória da matriz W nxp

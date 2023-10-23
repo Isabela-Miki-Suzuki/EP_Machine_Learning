@@ -55,7 +55,8 @@ def triang_h(a, w, p, n, m):
 # ------------------------------------------------------------------
 def resol_sist(a, w, n, m, p, method):
     ''' ( array, array, int, int, int) -> (array)/(bool)
-    RECEBE uma matriz A(nxm) e uma matriz W(nxp), ambas no formato de numpy.array
+    RECEBE uma matriz A(nxm) e uma matriz W(nxp)
+    , ambas no formato de numpy.array
     de floats.
     RETORNA uma matriz no formato numpy.array de floats que representa a
     aproximação para a solução do sistema W*H=A.
